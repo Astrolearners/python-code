@@ -1,0 +1,7 @@
+__pycache__/
+
+modules/communication/__pycache__/
+modules/helpers/__pycache__/
+modules/other/__pycache__/
+modules/sensors/__pycache__/
+
