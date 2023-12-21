@@ -1,4 +1,4 @@
-def gprmc_converter(nmea_string: str):
+def gprmcConverter(nmea_string: str):
     fields = nmea_string.split(",")
     if fields[0] == "$GPRMC" and len(fields) >= 12:
         data = []
@@ -32,7 +32,7 @@ def gprmc_converter(nmea_string: str):
         print("ERROR: Invalid or unsupported NMEA sentence")
         return ValueError
     
-def gpgga_converter(nmea_string: str):
+def gpggaConverter(nmea_string: str):
     fields = nmea_string.split(",")
     if fields[0] == "$GPGGA" and len(fields) >= 12:
         data = []

@@ -31,19 +31,19 @@ sensor.set_gas_heater_temperature(320)
 sensor.set_gas_heater_duration(150)
 sensor.select_gas_heater_profile(0)
 
-def get_temp():
+def getTemp():
     sensor.get_sensor_data()
     return sensor.data.temperature
 
-def get_humdity():
+def getHumdity():
     sensor.get_sensor_data()
     return sensor.data.humidity
 
-def get_pressure():
+def getPressure():
     sensor.get_sensor_data()
     return sensor.data.pressure
 
-def get_gas():
+def getGas():
     sensor.get_sensor_data()
     if sensor.data.heat_stable: # Probably should remove this
         sensor.data.gas_resistance
@@ -56,22 +56,22 @@ def get_gas():
 def test():
     print("TESTS: Testing humidity, pressure and temp readings.")
     try:
-        print(get_temp())
+        print(getTemp())
         print("TESTS: Humidity OK.")
     except:
         print("TESTS: Humidity ERROR.")
     try:
-        print(get_humdity())
+        print(getHumdity())
         print("TESTS: Temp OK.")
     except:
         print("TESTS: Temp ERROR.")
     try:
-        print(get_pressure())
+        print(getPressure())
         print("TESTS: Pressure OK.")
     except:
         print("TESTS: Pressure ERROR.")
     try:
-        print(get_gas())
+        print(getGas())
         print("TESTS: Gas OK.")
     except:
         print("TESTS: Gas ERROR.")
