@@ -1,24 +1,28 @@
 from .modules.sensors import bme680
 from .modules.communication import gps
 from .modules.communication import radio
+<<<<<<< HEAD
 from .modules.helpers import csv_handler
+=======
+from .modules.helpers import csv_handler, nmea_parser
+>>>>>>> 4559cd12a56fd86b54b8e0728a761398ea239eed
 from .modules.other import buzzer
 
 print("INFO: Running tests...")
 
-print("INFO: Communication tests...")
+print("TESTS: Communication tests...")
 
 gps.test()
 radio.test()
 
-print("INFO: Running sensor tests...")
+print("TESTS: Running sensor tests...")
 
 bme680.test()
 
-print("INFO: Running other tests...")
+print("TESTS: Running other tests...")
 
 buzzer.test()
 
-print("INFO: Running helper tests...")
+print("TESTS: Running helper tests...")
 
-# Nothing here
+nmea_parser.test()
