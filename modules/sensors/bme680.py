@@ -1,4 +1,4 @@
-#import bme680
+import bme680
 from modules.helpers.logger import logger
 
 class bme():
@@ -39,7 +39,7 @@ class bme():
         self.sensor.get_sensor_data()
         return self.data.temperature
 
-    def getHumdity(self):
+    def getHumidity(self):
         self.sensor.get_sensor_data()
         return self.sensor.data.humidity
 

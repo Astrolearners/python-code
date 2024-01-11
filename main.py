@@ -21,10 +21,10 @@ class main_code():
     def getBmeData(self):
         try:
             self.log.info("Getting data from bme680 sensor...")
-            self.bme_array(self.bme680.getHumdity())
-            self.bme_array(self.bme680.getTemp())
-            self.bme_array(self.bme680.getPressure())
-            self.bme_array(self.bme680.getGas())
+            self.bme_array.append(self.bme680.getHumidity())
+            self.bme_array.append(self.bme680.getTemp())
+            self.bme_array.append(self.bme680.getPressure())
+            self.bme_array.append(self.bme680.getGas())
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
