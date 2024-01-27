@@ -2,16 +2,14 @@ from modules.helpers.logger import logger
 from modules.sensors.bme680 import bme
 from time import sleep
 
-log_level = 3
-
 class main_code():
-    def __init__(self, log_level):
-        self.log = logger("main", log_level)
+    def __init__(self):
+        self.log = logger("main")
 
         self.log.info("Initializing sensors...")
         try:
             self.log.debug("Initializing bme680 sensor...")
-            self.bme680 = bme(log_level)
+            self.bme680 = bme()
         except Exception as e:
             self.log.error("Failed to initialize the bme680 sensor...")
 
@@ -28,7 +26,7 @@ class main_code():
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
-main = main_code(log_level)
+main = main_code()
 
 while True:
     main.log.debug("Hello, World!")

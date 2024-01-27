@@ -2,8 +2,8 @@ import bme680
 from modules.helpers.logger import logger
 
 class bme():
-    def __init__(self, log_level = 2):
-        self.log = logger("bme680", log_level)
+    def __init__(self):
+        self.log = logger("bme680")
 
         try:
             self.sensor = bme680.BME680(bme680.I2C_ADDR_PRIMARY)
