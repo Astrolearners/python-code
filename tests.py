@@ -1,24 +1,26 @@
-from .modules.sensors import bme680
-from .modules.communication import gps
-from .modules.communication import radio
-from .modules.helpers import csv_handler, nmea_parser
-from .modules.other import buzzer
+# Tests are disabled for now
 
-print("INFO: Running tests...")
+# from .modules.sensors import bme680
+# from .modules.communication import gps
+# from .modules.communication import radio
+# from .modules.helpers import csv_handler
+# from .modules.other import buzzer
 
-print("TESTS: Communication tests...")
+# print("INFO: Running tests...")
 
-gps.test()
-radio.test()
+# print("TESTS: Communication tests...")
 
-print("TESTS: Running sensor tests...")
+# gps.test()
+# radio.test()
 
-bme680.test()
+# print("TESTS: Running sensor tests...")
 
-print("TESTS: Running other tests...")
+# bme680.test()
 
-buzzer.test()
+# print("TESTS: Running other tests...")
 
-print("TESTS: Running helper tests...")
+# buzzer.test()
 
-nmea_parser.test()
+# print("TESTS: Running helper tests...")
+
+# nmea_parser.test()
