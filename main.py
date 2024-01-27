@@ -4,6 +4,8 @@ from datetime import datetime
 from modules.helpers.logger import logger
 from modules.sensors.bme680 import bme
 from modules.communication.gps import gps
+from modules.other.buzzer import buzzer
+from modules.other.rpi_temp import rpi_temp
 
 class main_code():
     def __init__(self):
@@ -16,11 +18,22 @@ class main_code():
         except Exception as e:
             self.log.error(f"Failed to initialize the bme680 sensor! Error: {e}")
 
+        self.log.info("Initializing modules...")
         try:
             self.log.debug("Initializing gps module...")
             self.gps = gps()
         except Exception as e:
             self.log.error(f"Failed to initialize the gps module! Error: {e}")
+        try:
+            self.log.debug("Initializing buzzer...")
+            self.buzzer = buzzer()
+        except Exception as e:
+            self.log.error(f"Failed to initialize the buzzer module! Error: {e}")
+        try:
+            self.log.debug("Initializing rpi_temp...")
+            self.rpi_temp = rpi_temp()
+        except Exception as e:
+            self.log.error(f"Failed to initialize the rpi_temp module! Error: {e}")
 
         self.log.info("Creating data arrays...")
         self.bme_data = {"Temperature": None, "Humidity": None, "Pressure": None, "GAS": None}
@@ -49,8 +62,15 @@ class main_code():
             self.log.error(f"Error getting data! Error: {e}")
 
     def run(self):
+        self.log.info("Ready!")
+        self.buzzer.beep(0.5, 2)
         while True:
-            print("hi")
-
+            self.log.info("Getting data...")
+            self.buzzer.beep(0.5, 1)
+            self.getGpsData()
+            self.getBmeData()
+            print(f"GPS Data: {self.gps_data}")
+            print(f"BME Data: {self.bme_data}")
+            print(f"Raspberry CPU Temp {self.rpi_temp.getCpuTemp()}")
 
 main_code().run()
