@@ -1,0 +1,7 @@
+adafruit_gps
+serial
+colorama
+datetime
+gpiozero
+subprocess
+bme680
