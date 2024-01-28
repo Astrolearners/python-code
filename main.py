@@ -17,14 +17,14 @@ class main_code():
             self.log.debug("Initializing bme680 sensor...")
             self.bme680 = bme()
         except Exception as e:
-            self.log.error(f"Failed to initialize the bme680 sensor! Error: {e}")
+            self.log.critical(f"Failed to initialize the bme680 sensor! Error: {e}")
 
         self.log.info("Initializing modules...")
         try:
             self.log.debug("Initializing gps module...")
             self.gps = gps()
         except Exception as e:
-            self.log.error(f"Failed to initialize the gps module! Error: {e}")
+            self.log.critical(f"Failed to initialize the gps module! Error: {e}")
         try:
             self.log.debug("Initializing buzzer...")
             self.buzzer = buzzer()

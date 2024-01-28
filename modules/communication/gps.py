@@ -9,12 +9,7 @@ class gps():
         self.log = logger("gps")
 
         self.uart = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=10)
-        try:
-            self.gps = adafruit_gps.GPS(self.uart, debug=False)
-        except Exception as e:
-            self.log.critical(f"Failed to contact with gps module. Cannot continue with program! Error: {e}")
-            # Scary
-            exit()
+        self.gps = adafruit_gps.GPS(self.uart, debug=False)
 
         self.log.debug("Setting communication method with sensor...")
         self.gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
