@@ -71,6 +71,6 @@ class main_code():
             self.getBmeData()
             print(f"GPS Data: {self.gps_data}")
             print(f"BME Data: {self.bme_data}")
-            print(f"Raspberry CPU Temp {self.rpi_temp.getCpuTemp()}")
+            print(f"Raspberry CPU Temp {self.rpi_temp.getCpuTemp()}C")
 
 main_code().run()

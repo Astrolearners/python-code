@@ -9,7 +9,7 @@ class buzzer():
 
         self.log.info("Initializing buzzer...")
         try:
-            self.buzzer = Buzzer(40)
+            self.buzzer = Buzzer(21)
         except Exception as e:
             self.log.error(f"Failed to initialize buzzer! Error: {e}")
 
