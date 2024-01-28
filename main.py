@@ -66,13 +66,18 @@ class main_code():
     def run(self):
         self.log.info("Ready!")
         self.buzzer.beep(0.5, 2)
-        while True:
-            self.log.info("Getting data...")
-            self.buzzer.beep(0.5, 1)
-            self.getGpsData()
-            self.getBmeData()
-            print(f"GPS Data: {self.gps_data}")
-            print(f"BME Data: {self.bme_data}")
-            print(f"Raspberry CPU Temp {self.rpi_temp.getCpuTemp()}C")
+        try:
+            while True:
+                self.log.info("Getting data...")
+                self.buzzer.beep(0.5, 1)
+                self.getGpsData()
+                self.getBmeData()
+                print(f"GPS Data: {self.gps_data}")
+                print(f"BME Data: {self.bme_data}")
+                print(f"Raspberry CPU Temp {self.rpi_temp.getCpuTemp()}C")
+        except KeyboardInterrupt:
+            self.log.warn("Detected keyboard interrupt shutting down...")
+            sleep(0.5)
+            exit()
 
 main_code().run()
