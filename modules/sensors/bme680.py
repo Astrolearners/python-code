@@ -38,7 +38,7 @@ class bme():
 
     def getTemp(self):
         self.sensor.get_sensor_data()
-        return self.data.temperature
+        return self.sensor.data.temperature
 
     def getHumidity(self):
         self.sensor.get_sensor_data()
