@@ -52,12 +52,14 @@ class main_code():
     def getGpsData(self):
         try:
             self.log.info("Getting data from gps module...")
-            self.gps_data["Latitude"] = self.gps.getLatitude()
-            self.gps_data["Longitude"] = self.gps.getLongitude()
-            self.gps_data["Altitude"] = self.gps.getAltitude()
-            self.gps_data["Speed"] = self.gps.getSpeed()
-            self.gps_data["Satellites"] = self.gps.getSatellites()
-            self.gps_data["Fix Quality"] = self.gps.getFixQuality()
+            for i in range(2):
+                self.gps.gpsUpdate()
+                self.gps_data["Latitude"] = self.gps.getLatitude()
+                self.gps_data["Longitude"] = self.gps.getLongitude()
+                self.gps_data["Altitude"] = self.gps.getAltitude()
+                self.gps_data["Speed"] = self.gps.getSpeed()
+                self.gps_data["Satellites"] = self.gps.getSatellites()
+                self.gps_data["Fix Quality"] = self.gps.getFixQuality()
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
