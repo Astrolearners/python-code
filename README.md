@@ -14,4 +14,4 @@ The class has 3 types of functions inside, the **init**() one which is mandatory
 
 The modules, its modules is its own class with a separate logger for debugging and giving general info about the process of retrieving or sending data from the modules/sensors. The modules are carefully designed so that if a mandatory one fails, like the gps one it will fail the program so we can't launch the cansat.
 
-> The modules won't fail mid flight, the fail procedure happens only in the beginning of the code. If a sensor doesn't respond the program will retry continusly to get data from it and if it fails it will just write None.
+> The modules won't fail mid-flight, the fail procedure happens only at the beginning of the code. If a sensor doesn't respond the program will retry continuously to get data from it and if it fails it will just write None.
