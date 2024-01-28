@@ -6,6 +6,7 @@ from modules.sensors.bme680 import bme
 from modules.communication.gps import gps
 from modules.other.buzzer import buzzer
 from modules.other.rpi_temp import rpi_temp
+from modules.schemas.schemas import *
 
 class main_code():
     def __init__(self):
@@ -36,16 +37,17 @@ class main_code():
             self.log.error(f"Failed to initialize the rpi_temp module! Error: {e}")
 
         self.log.info("Creating data arrays...")
-        self.bme_data = {"Temperature": None, "Humidity": None, "Pressure": None, "GAS": None}
-        self.gps_data = {"Latitude": None, "Longitude": None, "Altitude": None, "Speed": None, "Satellites": None, "Fix Quality": None}
+        self.bme_data = bme_schema
+        self.gps_data = gps_schema
+        self.main_data = main_schema
 
     def getBmeData(self):
         try:
             self.log.info("Getting data from bme680 sensor...")
-            self.bme_data["Temperature"] = self.bme680.getTemp()
-            self.bme_data["Humidity"] = self.bme680.getHumidity()
-            self.bme_data["Pressure"] = self.bme680.getPressure()
-            self.bme_data["GAS"] = self.bme680.getGas()
+            self.bme_data["temp"] = self.bme680.getTemp()
+            self.bme_data["humidity"] = self.bme680.getHumidity()
+            self.bme_data["pressure"] = self.bme680.getPressure()
+            self.bme_data["gas"] = self.bme680.getGas()
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
@@ -54,12 +56,12 @@ class main_code():
             self.log.info("Getting data from gps module...")
             for i in range(2):
                 self.gps.gpsUpdate()
-                self.gps_data["Latitude"] = self.gps.getLatitude()
-                self.gps_data["Longitude"] = self.gps.getLongitude()
-                self.gps_data["Altitude"] = self.gps.getAltitude()
-                self.gps_data["Speed"] = self.gps.getSpeed()
-                self.gps_data["Satellites"] = self.gps.getSatellites()
-                self.gps_data["Fix Quality"] = self.gps.getFixQuality()
+                self.gps_data["latitude"] = self.gps.getLatitude()
+                self.gps_data["longitude"] = self.gps.getLongitude()
+                self.gps_data["altitude"] = self.gps.getAltitude()
+                self.gps_data["speed"] = self.gps.getSpeed()
+                self.gps_data["satellites"] = self.gps.getSatellites()
+                self.gps_data["fixQuality"] = self.gps.getFixQuality()
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
@@ -70,11 +72,14 @@ class main_code():
             while True:
                 self.log.info("Getting data...")
                 self.buzzer.beep(0.5, 1)
+                time = datetime.now()
                 self.getGpsData()
                 self.getBmeData()
-                print(f"GPS Data: {self.gps_data}")
-                print(f"BME Data: {self.bme_data}")
-                print(f"Raspberry CPU Temp {self.rpi_temp.getCpuTemp()}C")
+                self.main_data["time"] = f"{time.hour}:{time.minute}:{time.second}"
+                self.main_data["bme"] = self.bme_data
+                self.main_data["gps"] = self.gps_data
+                self.main_data["rpi_temp"] = self.rpi_temp.getCpuTemp()
+                print(self.main_data)
         except KeyboardInterrupt:
             self.log.warn("Detected keyboard interrupt shutting down...")
             sleep(0.5)
