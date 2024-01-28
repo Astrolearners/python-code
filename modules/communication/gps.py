@@ -20,6 +20,10 @@ class gps():
         self.gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
         self.gps.send_command(b"PMTK220,1000")
 
+    def gpsUpdate(self):
+        self.gps.update()
+        return None
+    
     def getLatitude(self):
         if self.gps.has_fix:
             return self.gps.latitude
