@@ -1,5 +1,5 @@
 adafruit-circuitpython-gps
-serial
+pyserial
 colorama
 datetime
 gpiozero

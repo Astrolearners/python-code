@@ -23,7 +23,7 @@ class gps():
     def gpsUpdate(self):
         self.gps.update()
         return None
-    
+
     def getLatitude(self):
         if self.gps.has_fix:
             return self.gps.latitude
