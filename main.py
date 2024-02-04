@@ -12,22 +12,10 @@ class main_code():
     def __init__(self):
         self.log = logger("main")
 
-        self.log.info("Initializing sensors...")
-        try:
-            self.log.debug("Initializing bme680 sensor...")
-            self.bme680 = bme()
-        except Exception as e:
-            self.log.critical(f"Failed to initialize the bme680 sensor! Error: {e}")
-
-        self.log.info("Initializing modules...")
-        try:
-            self.log.debug("Initializing gps module...")
-            self.gps = gps()
-        except Exception as e:
-            self.log.critical(f"Failed to initialize the gps module! Error: {e}")
+        self.log.info("Initializing helper components...")
         try:
             self.log.debug("Initializing buzzer...")
-            self.buzzer = buzzer()
+            self.buzzer = buzzer("passive")
         except Exception as e:
             self.log.error(f"Failed to initialize the buzzer module! Error: {e}")
         try:
@@ -35,6 +23,22 @@ class main_code():
             self.rpi_temp = rpi_temp()
         except Exception as e:
             self.log.error(f"Failed to initialize the rpi_temp module! Error: {e}")
+
+        self.log.info("Initializing sensors...")
+        try:
+            self.log.debug("Initializing bme680 sensor...")
+            self.bme680 = bme()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the bme680 sensor! Error: {e}")
+            self.buzzer.beep(2, 1)
+
+        self.log.info("Initializing modules...")
+        try:
+            self.log.debug("Initializing gps module...")
+            self.gps = gps()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the gps module! Error: {e}")
+            self.buzzer.beep(3, 1)
 
         self.log.info("Creating data arrays...")
         self.bme_data = bme_schema

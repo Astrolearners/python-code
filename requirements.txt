@@ -1,7 +1,6 @@
-adafruit_gps
-serial
+adafruit-circuitpython-gps
+pyserial
 colorama
 datetime
 gpiozero
-subprocess
 bme680
