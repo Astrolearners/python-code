@@ -1,9 +1,11 @@
 from time import sleep
 from datetime import datetime
+import os
 
 from modules.helpers.logger import logger
 from modules.sensors.bme680 import bme
 from modules.sensors.accelerometer import accelerometer
+from modules.sensors.camera import camera
 from modules.communication.gps import gps
 from modules.other.buzzer import buzzer
 from modules.other.rpi_temp import rpi_temp
@@ -12,6 +14,7 @@ from modules.schemas.schemas import *
 class main_code():
     def __init__(self):
         self.log = logger("main")
+        self.capture_path = f"{os.getcwd()}/captures"
 
         self.log.info("Initializing helper components...")
         try:
@@ -45,6 +48,19 @@ class main_code():
             self.gps = gps()
         except Exception as e:
             self.log.critical(f"Failed to initialize the gps module! Error: {e}")
+            self.buzzer.beep(3, 1)
+        try:
+            self.log.debug("Initializing camera...")
+            if not os.path.exists(self.capture_path):
+                try:
+                    os.mkdir(self.capture_path)
+                except Exception as e:
+                    self.log.error(f"Failed to create capture path! Error: {e}")
+                    raise "Failed to create capture path!"
+            self.camera = camera(self.capture_path)
+            self.camera.start()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the camera module! Error: {e}")
             self.buzzer.beep(3, 1)
 
         self.log.info("Creating data arrays...")
@@ -105,10 +121,11 @@ class main_code():
                 self.main_data["gps"] = self.gps_data
                 self.main_data["accelerometer"] = self.accelerometer_data
                 self.main_data["rpi_temp"] = self.rpi_temp.getCpuTemp()
+                self.camera.capture()
                 print(self.main_data)
         except KeyboardInterrupt:
             self.log.warn("Detected keyboard interrupt shutting down...")
-            sleep(0.5)
+            self.camera.stop()
             exit()
 
 main_code().run()
