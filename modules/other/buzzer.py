@@ -35,12 +35,3 @@ class buzzer():
                 self.buzzer.off()
             else:
                 self.log.error("Invalid buzzer type!")
-
-# Tests not ready
-# def test():
-#     print("TESTS: Bipping buzzer.")
-#     try:
-#         print(buzz())
-#         print("TESTS: Buzzer OK.")
-#     except:
-#         print("TESTS: Buzzer ERROR.")

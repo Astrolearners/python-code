@@ -56,27 +56,3 @@ class bme():
         else:
             self.log.warn("Sensor not heat stable!")
             return None
-
-# Test section do not touch! Not ready
-# def test():
-#     print("TESTS: Testing humidity, pressure and temp readings.")
-#     try:
-#         print(getTemp())
-#         print("TESTS: Humidity OK.")
-#     except:
-#         print("TESTS: Humidity ERROR.")
-#     try:
-#         print(getHumdity())
-#         print("TESTS: Temp OK.")
-#     except:
-#         print("TESTS: Temp ERROR.")
-#     try:
-#         print(getPressure())
-#         print("TESTS: Pressure OK.")
-#     except:
-#         print("TESTS: Pressure ERROR.")
-#     try:
-#         print(getGas())
-#         print("TESTS: Gas OK.")
-#     except:
-#         print("TESTS: Gas ERROR.")
