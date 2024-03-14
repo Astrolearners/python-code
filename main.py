@@ -3,6 +3,7 @@ from datetime import datetime
 
 from modules.helpers.logger import logger
 from modules.sensors.bme680 import bme
+from modules.sensors.accelerometer import accelerometer
 from modules.communication.gps import gps
 from modules.other.buzzer import buzzer
 from modules.other.rpi_temp import rpi_temp
@@ -31,6 +32,12 @@ class main_code():
         except Exception as e:
             self.log.critical(f"Failed to initialize the bme680 sensor! Error: {e}")
             self.buzzer.beep(2, 1)
+        try:
+            self.log.debug("Initializing accelerometer sensor...")
+            self.accelerometer = accelerometer()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the accelerometer sensor! Error: {e}")
+            self.buzzer.beep(2, 1)
 
         self.log.info("Initializing modules...")
         try:
@@ -43,6 +50,7 @@ class main_code():
         self.log.info("Creating data arrays...")
         self.bme_data = bme_schema
         self.gps_data = gps_schema
+        self.accelerometer_data = accelerometer_schema
         self.main_data = main_schema
 
     def getBmeData(self):
@@ -69,6 +77,18 @@ class main_code():
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
+    def getAccelerometerData(self):
+        try:
+            self.log.info("Getting data from accelerometer sensor...")
+            self.accelerometer_data["accelerometer"]["X"] = self.accelerometer.getAccelerometer()[0]
+            self.accelerometer_data["accelerometer"]["Y"] = self.accelerometer.getAccelerometer()[1]
+            self.accelerometer_data["accelerometer"]["Z"] = self.accelerometer.getAccelerometer()[2]
+            self.accelerometer_data["magnetometer"]["X"] = self.accelerometer.getAccelerometer()[0]
+            self.accelerometer_data["magnetometer"]["Y"] = self.accelerometer.getAccelerometer()[1]
+            self.accelerometer_data["magnetometer"]["Z"] = self.accelerometer.getAccelerometer()[2]
+        except Exception as e:
+            self.log.error("Error getting data! Error: {e}")
+
     def run(self):
         self.log.info("Ready!")
         self.buzzer.beep(0.5, 2)
@@ -79,9 +99,11 @@ class main_code():
                 time = datetime.now()
                 self.getGpsData()
                 self.getBmeData()
+                self.getAccelerometerData()
                 self.main_data["time"] = f"{time.hour}:{time.minute}:{time.second}"
                 self.main_data["bme"] = self.bme_data
                 self.main_data["gps"] = self.gps_data
+                self.main_data["accelerometer"] = self.accelerometer_data
                 self.main_data["rpi_temp"] = self.rpi_temp.getCpuTemp()
                 print(self.main_data)
         except KeyboardInterrupt:
