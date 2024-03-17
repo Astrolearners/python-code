@@ -13,6 +13,7 @@ class radio():
         self.log.debug("Connecting to gps module...")
         try:
             self.radio = serial.Serial(port, baudrate=9600)
+            self.radio.rts = False
         except Exception as e:
             self.log.critical(f"Failed to contact gps module! Error: {e}")
             # exit()
