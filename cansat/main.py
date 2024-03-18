@@ -1,8 +1,11 @@
 from time import sleep
 from datetime import datetime
+import os
 
 from modules.helpers.logger import logger
 from modules.sensors.bme680 import bme
+from modules.sensors.accelerometer import accelerometer
+from modules.sensors.camera import camera
 from modules.communication.gps import gps
 from modules.other.buzzer import buzzer
 from modules.other.rpi_temp import rpi_temp
@@ -11,6 +14,7 @@ from modules.schemas.schemas import *
 class main_code():
     def __init__(self):
         self.log = logger("main")
+        self.capture_path = f"{os.getcwd()}/captures"
 
         self.log.info("Initializing helper components...")
         try:
@@ -31,6 +35,12 @@ class main_code():
         except Exception as e:
             self.log.critical(f"Failed to initialize the bme680 sensor! Error: {e}")
             self.buzzer.beep(2, 1)
+        try:
+            self.log.debug("Initializing accelerometer sensor...")
+            self.accelerometer = accelerometer()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the accelerometer sensor! Error: {e}")
+            self.buzzer.beep(2, 1)
 
         self.log.info("Initializing modules...")
         try:
@@ -39,10 +49,24 @@ class main_code():
         except Exception as e:
             self.log.critical(f"Failed to initialize the gps module! Error: {e}")
             self.buzzer.beep(3, 1)
+        try:
+            self.log.debug("Initializing camera...")
+            if not os.path.exists(self.capture_path):
+                try:
+                    os.mkdir(self.capture_path)
+                except Exception as e:
+                    self.log.error(f"Failed to create capture path! Error: {e}")
+                    raise "Failed to create capture path!"
+            self.camera = camera(self.capture_path)
+            self.camera.start()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the camera module! Error: {e}")
+            self.buzzer.beep(3, 1)
 
         self.log.info("Creating data arrays...")
         self.bme_data = bme_schema
         self.gps_data = gps_schema
+        self.accelerometer_data = accelerometer_schema
         self.main_data = main_schema
 
     def getBmeData(self):
@@ -69,6 +93,18 @@ class main_code():
         except Exception as e:
             self.log.error(f"Error getting data! Error: {e}")
 
+    def getAccelerometerData(self):
+        try:
+            self.log.info("Getting data from accelerometer sensor...")
+            self.accelerometer_data["accelerometer"]["X"] = self.accelerometer.getAccelerometer()[0]
+            self.accelerometer_data["accelerometer"]["Y"] = self.accelerometer.getAccelerometer()[1]
+            self.accelerometer_data["accelerometer"]["Z"] = self.accelerometer.getAccelerometer()[2]
+            self.accelerometer_data["magnetometer"]["X"] = self.accelerometer.getAccelerometer()[0]
+            self.accelerometer_data["magnetometer"]["Y"] = self.accelerometer.getAccelerometer()[1]
+            self.accelerometer_data["magnetometer"]["Z"] = self.accelerometer.getAccelerometer()[2]
+        except Exception as e:
+            self.log.error("Error getting data! Error: {e}")
+
     def run(self):
         self.log.info("Ready!")
         self.buzzer.beep(0.5, 2)
@@ -79,14 +115,17 @@ class main_code():
                 time = datetime.now()
                 self.getGpsData()
                 self.getBmeData()
+                self.getAccelerometerData()
                 self.main_data["time"] = f"{time.hour}:{time.minute}:{time.second}"
                 self.main_data["bme"] = self.bme_data
                 self.main_data["gps"] = self.gps_data
+                self.main_data["accelerometer"] = self.accelerometer_data
                 self.main_data["rpi_temp"] = self.rpi_temp.getCpuTemp()
+                self.camera.capture()
                 print(self.main_data)
         except KeyboardInterrupt:
             self.log.warn("Detected keyboard interrupt shutting down...")
-            sleep(0.5)
+            self.camera.stop()
             exit()
 
 main_code().run()

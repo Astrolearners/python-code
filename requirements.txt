@@ -1,4 +1,6 @@
 adafruit-circuitpython-gps
+adafruit-circuitpython-lsm303dlh-mag
+adafruit-circuitpython-lsm303-accel
 pyserial
 colorama
 datetime
