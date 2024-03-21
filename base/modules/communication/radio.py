@@ -13,23 +13,20 @@ class radio():
         self.log.debug("Connecting to gps module...")
         try:
             self.radio = serial.Serial(port, baudrate=9600)
-            self.radio.setRTS(0)
+            self.radio.rts = False
+            self.radio.timeout = 10
         except Exception as e:
             self.log.critical(f"Failed to contact gps module! Error: {e}")
 
-    def radioSendCommand(self, command):
+    def sendCommand(self, command):
         self.log.debug(f"Sending command {command}...")
         try:
             self.radio.write(command.encode())
-            retries = 0
-            response = ""
-            while response.find(command) == -1:
-                response = self.radio.readline().decode()
-                retries += 1
-                if retries >= self.max_retries + 1:
-                    self.log.critical("Didn't get response from cansat!")
-                    return
-                time.sleep(0.1)
-            self.log.info(f"Got response from cansat! Response: {response}")
+            response = self.radio.readline().decode()
+            if response != "":
+                self.log.info(
+                    f"Got response from cansat! Response: {response}")
+            else:
+                self.log.warn("Timeout reached!")
         except Exception as e:
             self.log.error(f"Failed to send command! Error {e}")

@@ -12,7 +12,7 @@ class main_code():
         self.log = logger("main")
 
         self.log.info("Initializing radio communication...")
-        self.radio = radio("COM3")
+        self.radio = radio("COM4")
 
         self.log.info("Initializing commandHanlder...")
         self.handler = commandHandler()
