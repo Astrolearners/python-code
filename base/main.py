@@ -1,5 +1,6 @@
 import time
 import os
+import colorama
 
 from modules.communication.radio import radio
 from modules.helpers.logger import logger
@@ -10,9 +11,10 @@ from modules.helpers.commandHandler import commandHandler
 class main_code():
     def __init__(self):
         self.log = logger("main")
+        colorama.init(autoreset=True)
 
         self.log.info("Initializing radio communication...")
-        self.radio = radio("COM4")
+        self.radio = radio(input(colorama.Fore.BLUE + "Enter Port >> " + colorama.Fore.RESET))
 
         self.log.info("Initializing commandHanlder...")
         self.handler = commandHandler()
