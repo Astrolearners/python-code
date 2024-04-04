@@ -1,12 +1,14 @@
 from time import sleep
 from datetime import datetime
 import os
+import threading
 
 from modules.helpers.logger import logger
 from modules.sensors.bme680 import bme
 from modules.sensors.accelerometer import accelerometer
 from modules.sensors.camera import camera
 from modules.communication.gps import gps
+from modules.communication.radio import radio
 from modules.other.buzzer import buzzer
 from modules.other.rpi_temp import rpi_temp
 from modules.schemas.schemas import *
@@ -103,29 +105,58 @@ class main_code():
             self.accelerometer_data["magnetometer"]["Y"] = self.accelerometer.getAccelerometer()[1]
             self.accelerometer_data["magnetometer"]["Z"] = self.accelerometer.getAccelerometer()[2]
         except Exception as e:
-            self.log.error("Error getting data! Error: {e}")
+            self.log.error(f"Error getting data! Error: {e}")
+
+    def setData(self):
+        self.log.info("Getting data...")
+        self.buzzer.beep(0.5, 1)
+        time = datetime.now()
+        self.getGpsData()
+        self.getBmeData()
+        self.getAccelerometerData()
+        self.main_data["time"] = f"{time.hour}:{time.minute}:{time.second}"
+        self.main_data["bme"] = self.bme_data
+        self.main_data["gps"] = self.gps_data
+        self.main_data["accelerometer"] = self.accelerometer_data
+        self.main_data["rpi_temp"] = self.rpi_temp.getCpuTemp()
+        self.camera.capture()
 
     def run(self):
         self.log.info("Ready!")
         self.buzzer.beep(0.5, 2)
         try:
             while True:
-                self.log.info("Getting data...")
-                self.buzzer.beep(0.5, 1)
-                time = datetime.now()
-                self.getGpsData()
-                self.getBmeData()
-                self.getAccelerometerData()
-                self.main_data["time"] = f"{time.hour}:{time.minute}:{time.second}"
-                self.main_data["bme"] = self.bme_data
-                self.main_data["gps"] = self.gps_data
-                self.main_data["accelerometer"] = self.accelerometer_data
-                self.main_data["rpi_temp"] = self.rpi_temp.getCpuTemp()
-                self.camera.capture()
+                self.setData()
                 print(self.main_data)
         except KeyboardInterrupt:
             self.log.warn("Detected keyboard interrupt shutting down...")
             self.camera.stop()
             exit()
 
-main_code().run()
+radio_com = radio()
+main = main_code()
+
+thread = threading.Thread(main.run())
+
+while True:
+    command = radio_com.get()
+    if command == "start":
+        print("Start command!")
+        thread.start()
+        radio_com.send("start: ok")
+    elif command == "stop":
+        print("Stop command!")
+        thread.stop()
+        radio_com.send("stop: ok")
+    elif command == "restart":
+        print("Restart command!")
+        thread.stop()
+        sleep(1)
+        thread.start()
+        radio_com.send("restart: ok")
+    elif command == "getData":
+        print("Get data command!")
+        radio_com.send(f"getData: {main.main_data}")
+    elif command == "ping":
+        print("Ping command!")
+        radio_com.send("pong")
