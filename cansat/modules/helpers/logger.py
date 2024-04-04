@@ -1,27 +1,49 @@
-import colorama
-import datetime
+import colorlog
+import logging
+import sys
 
 class logger():
-    def __init__(self, name):
-        colorama.init()
+    def __init__(self, name, path="log.log", level=logging.DEBUG):
         self.name = name
+        self.path = path
+        self.level = level
+
+        # Create logger
+        self.logger = logging.getLogger(self.name)
+        self.logger.setLevel(self.level)
+
+        # Create handlers
+        self.file_logger = logging.FileHandler(self.path, mode="w", encoding="utf-8")
+        self.console_logger = logging.StreamHandler(sys.stdout)
+
+        # Create formatter
+        self.formatter = colorlog.ColoredFormatter("%(log_color)s%(name)s: %(asctime)s -  %(levelname)s >\t%(message)s", datefmt="%d-%m-%Y %H:%M:%S", reset=True, log_colors={
+            "DEBUG":    "cyan",
+            "INFO":     "green",
+            "WARNING":  "yellow",
+            "ERROR":    "red",
+            "CRITICAL": "bold_red",
+	    },)
         
+        # Set formatters
+        self.file_logger.setFormatter(self.formatter)
+        self.console_logger.setFormatter(self.formatter)
+
+        # Add handler to logger
+        self.logger.addHandler(self.file_logger)
+        self.logger.addHandler(self.console_logger)
+
     def info(self, text):
-        date_time = datetime.datetime.now()
-        print(f"{self.name}: {date_time} - {colorama.Fore.BLUE} info {colorama.Fore.RESET} >\t{text}")
+        self.logger.info(text)
 
     def warn(self, text):
-        date_time = datetime.datetime.now()
-        print(f"{self.name}: {date_time} - {colorama.Fore.YELLOW} warn {colorama.Fore.RESET} >\t{text}")
+        self.logger.warn(text)
 
     def error(self, text):
-        date_time = datetime.datetime.now()
-        print(f"{self.name}: {date_time} - {colorama.Fore.RED} error {colorama.Fore.RESET} >\t{text}")
+        self.logger.error(text)
 
     def debug(self, text):
-        date_time = datetime.datetime.now()
-        print(f"{self.name}: {date_time} - {colorama.Fore.GREEN} debug {colorama.Fore.RESET} >\t{text}")
+        self.logger.debug(text)
 
     def critical(self, text):
-        date_time = datetime.datetime.now()
-        print(f"{self.name}: {date_time} - {colorama.Back.RED}critical{colorama.Back.RESET} >\t{text}")
+        self.logger.critical(text)

@@ -6,3 +6,5 @@ modules/other/__pycache__/
 modules/sensors/__pycache__/
 
 captures/
+
+*.log
