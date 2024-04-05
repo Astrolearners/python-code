@@ -4,16 +4,17 @@ from time import sleep
 from modules.helpers.logger import logger
 
 class buzzer():
-    def __init__(self, type="passive"):
+    def __init__(self, pin, type="passive"):
         self.log = logger("buzzer")
         self.type = type
+        self.pin = pin
 
         self.log.info("Initializing buzzer...")
         try:
             if self.type == "passive":
-                self.buzzer = TonalBuzzer(21)
+                self.buzzer = TonalBuzzer(self.pin)
             elif self.type == "active":
-                self.buzzer = Buzzer(21)
+                self.buzzer = Buzzer(self.pin)
             else:
                 self.log.error("Invalid buzzer type!")
         except Exception as e:

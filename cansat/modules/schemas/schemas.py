@@ -5,7 +5,7 @@ bme_schema = {
     "gas": None
 }
 
-gps_schema =  {
+gps_schema = {
     "latitude": None,
     "longitude": None,
     "altitude": None,
@@ -32,5 +32,26 @@ main_schema = {
     "bme": bme_schema,
     "gps": gps_schema,
     "accelerometer": accelerometer_schema,
+    "rpi_temp": None
+}
+
+dataframe_schema = {
+    "time": None,
+    "temp": None,
+    "humidity": None,
+    "pressure": None,
+    "gas": None,
+    "latitude": None,
+    "longitude": None,
+    "altitude": None,
+    "speed": None,
+    "satellites": None,
+    "fixQuality": None,
+    "accelerometer-X": None,
+    "accelerometer-Y": None,
+    "accelerometer-Z": None,
+    "magnetometer-X": None,
+    "magnetometer-Y": None,
+    "magnetometer-Z": None,
     "rpi_temp": None
 }

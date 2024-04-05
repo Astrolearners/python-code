@@ -1,17 +1,17 @@
 import pigpio
-import logging
 import time
 
+from modules.helpers.logger import logger
+
 class softwareSerial():
-    def __init__(self, txd_pin, rxd_pin, baudrate, timeout=15, new="/n", eol="/n"):
-        logging.basicConfig(level=logging.DEBUG)
-        self.logger = logging.getLogger(__name__)
+    def __init__(self, txd_pin, rxd_pin, baudrate, timeout=15, bol="$", eol="/r"):
+        self.logger = logger("softwareSerial", path="software-serial.log")
 
         self.txd = txd_pin
         self.rxd = rxd_pin
         self.baudrate = baudrate
         self.timeout = timeout
-        self.new = new
+        self.bol = bol
         self.eol = eol
 
         self.logger.info("Initializing pigpio...")
@@ -62,7 +62,7 @@ class softwareSerial():
 
                     final_string = final_string + data
 
-                    if final_string.find(self.new) != -1:
+                    if final_string.find(self.bol) != -1:
                         while int(byte_count) > 0:
                             (byte_count, data) = self.pigpio.bb_serial_read(self.rxd)
 
@@ -74,7 +74,7 @@ class softwareSerial():
                             final_string = final_string + data
 
                             if final_string.find(self.eol) != -1:
-                                final_string = final_string.strip(self.new)
+                                final_string = final_string.strip(self.bol)
                                 final_string = final_string.strip(self.eol)
                                 return final_string
             self.logger.warning("Timeout reached!")

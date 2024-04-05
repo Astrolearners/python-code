@@ -2,10 +2,9 @@ import time
 import os
 import colorama
 
+from modules.helpers.commandHandler import commandHandler
 from modules.communication.radio import radio
 from modules.helpers.logger import logger
-
-from modules.helpers.commandHandler import commandHandler
 
 
 class main_code():

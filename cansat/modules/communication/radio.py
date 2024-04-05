@@ -6,7 +6,7 @@ class radio():
         self.log = logger("radio")
         
         self.log.debug("Creating software serial connection...")
-        self.radio = softwareSerial(5, 6, 9600)
+        self.radio = softwareSerial(23, 24, 9600)
 
         self.log.debug("Software serial ready!")
 

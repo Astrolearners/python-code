@@ -3,7 +3,7 @@ import logging
 import sys
 
 class logger():
-    def __init__(self, name, path="log.log", level=logging.DEBUG):
+    def __init__(self, name, path="base.log", level=logging.DEBUG):
         self.name = name
         self.path = path
         self.level = level

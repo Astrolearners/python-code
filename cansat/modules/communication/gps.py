@@ -1,4 +1,3 @@
-from time import sleep
 import adafruit_gps
 import serial
 
