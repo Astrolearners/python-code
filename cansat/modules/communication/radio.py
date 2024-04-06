@@ -19,7 +19,7 @@ class radio():
 
     def get(self):
         try:
-            self.log("Waiting for message...")
+            self.log.info("Waiting for message...")
             message = self.radio.read()
             if message != None:
                 return message
