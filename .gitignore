@@ -8,3 +8,5 @@ modules/sensors/__pycache__/
 captures/
 
 *.log
+
+testing.py

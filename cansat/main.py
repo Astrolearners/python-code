@@ -189,8 +189,6 @@ class main_code():
 main = main_code()
 r = radio()
 
-thread = None
-find_thread = None
 running = False
 find = False
 
@@ -210,13 +208,11 @@ while True:
         elif command.find("stop") != -1:
             if running:
                 main.safeShutdown()
-                thread.stop()
                 r.send("stop: ok")
             else:
                 r.send("stop: fail: not running")
         elif command.find("restart") != -1:
             main.safeShutdown()
-            thread.stop()
             thread = None
             main.running = True
             thread = threading.Thread(target=main.run).start()
@@ -239,7 +235,6 @@ while True:
         elif command.find("findstop") != -1:
             if find:
                 main.find = False
-                find_thread.stop()
                 r.send("findstop: ok")
             else:
                 r.send("findstop: fail: not in find mode")
