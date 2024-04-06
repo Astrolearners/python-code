@@ -1,12 +1,11 @@
+# Cache
+
 __pycache__/
 
-modules/communication/__pycache__/
-modules/helpers/__pycache__/
-modules/other/__pycache__/
-modules/sensors/__pycache__/
-
+# Data
 captures/
+logs/
+csv-files/
 
-*.log
-
+# Testing files
 testing.py

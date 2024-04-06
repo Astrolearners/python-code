@@ -1,9 +1,17 @@
 import colorlog
 import logging
 import sys
+from datetime import datetime
+
+from modules.constants.constats import log_path
+
+def setFileName():
+    date_time = datetime.now()
+    file_name = date_time.strftime("%d_%m_%y-%H-%M-%S.log")
+    return f"{log_path}/{file_name}"
 
 class logger():
-    def __init__(self, name, path="cansat.log", level=logging.DEBUG):
+    def __init__(self, name, path=setFileName(), level=logging.DEBUG):
         self.name = name
         self.path = path
         self.level = level
@@ -13,7 +21,7 @@ class logger():
         self.logger.setLevel(self.level)
 
         # Create handlers
-        self.file_logger = logging.FileHandler(self.path, mode="w", encoding="utf-8")
+        self.file_logger = logging.FileHandler(self.path, mode="a", encoding="utf-8")
         self.console_logger = logging.StreamHandler(sys.stdout)
 
         # Create formatter

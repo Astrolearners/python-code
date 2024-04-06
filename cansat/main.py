@@ -23,14 +23,18 @@ from modules.other.rpi_temp import rpi_temp
 # Schemas
 from modules.schemas.schemas import *
 
+# Constants
+from modules.constants.constats import *
 
 class main_code():
     def __init__(self):
         self.log = logger("main")
-        self.capture_path = f"{os.getcwd()}/captures"
-        self.csv_path = f"{os.getcwd}/"
+
         self.running = True
         self.find = False
+
+        self.csv_path = csv_path
+        self.capture_path = capture_path
 
         self.log.info("Initializing helper components...")
 
@@ -85,13 +89,6 @@ class main_code():
 
         try:
             self.log.debug("Initializing camera...")
-            if not os.path.exists(self.capture_path):
-                try:
-                    os.mkdir(self.capture_path)
-                except Exception as e:
-                    self.log.error(f"Failed to create capture path! Error: {e}")
-                    raise "Failed to create capture path!"
-                
             self.camera = camera(self.capture_path)
             self.camera.start()
         except Exception as e:

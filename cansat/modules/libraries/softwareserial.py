@@ -5,7 +5,7 @@ from modules.helpers.logger import logger
 
 class softwareSerial():
     def __init__(self, txd_pin, rxd_pin, baudrate, timeout=15, bol="$", eol="/r"):
-        self.logger = logger("softwareSerial", path="software-serial.log")
+        self.logger = logger("softwareSerial")
 
         self.txd = txd_pin
         self.rxd = rxd_pin
