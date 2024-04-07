@@ -1,7 +1,6 @@
 # System libraries
 from datetime import datetime
 import threading
-import os
 
 # Helpers
 from modules.helpers.logger import logger
@@ -176,6 +175,7 @@ class main_code():
 
                 # Parse to csv
                 self.csv_handler.addData(self.main_data)
+                self.csv_handler.saveDataframe()
                 
                 # Log
                 self.log.debug(self.main_data)

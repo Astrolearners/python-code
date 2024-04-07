@@ -44,5 +44,5 @@ class csvHandler():
     def saveDataframe(self):
         self.log.info("Saving data to csv...")
         date_time = datetime.datetime.now()
-        file_name = date_time.strftime("%d_%m_%y-%H-%M-%S.csv")
+        file_name = date_time.strftime("%d_%m_%y-data.csv")
         self.dataFrame.to_csv(f"{self.csv_path}/{file_name}")
