@@ -1,55 +1,31 @@
-import adafruit_gps
-import serial
+import pynmea2 
 
 from modules.helpers.logger import logger
+from modules.libraries.softwareserial import softwareSerial
 
 class gps():
     def __init__(self):
         self.log = logger("gps")
+        
+        self.log.debug("Creating software serial connection...")
+        self.gps = softwareSerial(5, 6, 9600)
 
-        self.uart = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=10)
-        self.gps = adafruit_gps.GPS(self.uart, debug=False)
+        self.log.debug("Software serial ready!")
 
-        self.log.debug("Setting communication method with sensor...")
-        self.gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
-        self.gps.send_command(b"PMTK220,1000")
+        self.receivedData = ""
 
-    def gpsUpdate(self):
-        self.gps.update()
+    def getSerialData(self):
+        self.log.info("Getting serial data...")
+        self.receivedData = self.gps.read()
+
+    def parseData(self):
+        self.log.info("Parsing data to pynmea2...")
+        data = pynmea2.parse(self.receivedData)
+        return data
+    
+    def getData(self):
+        self.log.info("Getting data from gps...")
+        self.getSerialData()
+        if self.receivedData.find("GPGGA") != -1:
+            return self.parseData()
         return None
-    
-    def getLatitude(self):
-        if self.gps.has_fix:
-            return self.gps.latitude
-        else:
-            return None
-    
-    def getLongitude(self):
-        if self.gps.has_fix:
-            return self.gps.longitude
-        else:
-            return None
-    
-    def getAltitude(self):
-        if self.gps.has_fix:
-            return self.gps.altitude_m
-        else:
-            return None
-        
-    def getSpeed(self):
-        if self.gps.has_fix:
-            return self.gps.speed_knots
-        else:
-            return None
-        
-    def getSatellites(self):
-        if self.gps.has_fix:
-            return self.gps.satellites
-        else:
-            return None
-        
-    def getFixQuality(self):
-        if self.gps.has_fix:
-            return self.gps.fix_quality
-        else:
-            return None

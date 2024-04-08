@@ -8,10 +8,7 @@ bme_schema = {
 gps_schema = {
     "latitude": None,
     "longitude": None,
-    "altitude": None,
-    "speed": None,
-    "satellites": None,
-    "fixQuality": None
+    "altitude": None
 }
 
 accelerometer_schema = {
@@ -44,9 +41,6 @@ dataframe_schema = {
     "latitude": None,
     "longitude": None,
     "altitude": None,
-    "speed": None,
-    "satellites": None,
-    "fixQuality": None,
     "accelerometer-X": None,
     "accelerometer-Y": None,
     "accelerometer-Z": None,
