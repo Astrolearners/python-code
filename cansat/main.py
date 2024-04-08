@@ -32,9 +32,6 @@ class main_code():
         self.running = True
         self.find = False
 
-        self.csv_path = csv_path
-        self.capture_path = capture_path
-
         self.log.info("Initializing helper components...")
 
         try:
@@ -57,7 +54,7 @@ class main_code():
      
         try:
             self.log.debug("Initializing csv handler...")
-            self.csv_handler = csvHandler(self.csv_path)
+            self.csv_handler = csvHandler()
         except Exception as e:
             self.log.error(f"Failed to initialize the csv_handler module! Error: {e}")
 
@@ -88,7 +85,7 @@ class main_code():
 
         try:
             self.log.debug("Initializing camera...")
-            self.camera = camera(self.capture_path)
+            self.camera = camera()
             self.camera.start()
         except Exception as e:
             self.log.critical(f"Failed to initialize the camera module! Error: {e}")
@@ -113,14 +110,13 @@ class main_code():
     def getGpsData(self):
         try:
             self.log.info("Getting data from gps module...")
-            for i in range(2):
-                self.gps.gpsUpdate()
-                self.gps_data["latitude"] = self.gps.getLatitude()
-                self.gps_data["longitude"] = self.gps.getLongitude()
-                self.gps_data["altitude"] = self.gps.getAltitude()
-                self.gps_data["speed"] = self.gps.getSpeed()
-                self.gps_data["satellites"] = self.gps.getSatellites()
-                self.gps_data["fixQuality"] = self.gps.getFixQuality()
+            self.gps.gpsUpdate()
+            self.gps_data["latitude"] = self.gps.getLatitude()
+            self.gps_data["longitude"] = self.gps.getLongitude()
+            self.gps_data["altitude"] = self.gps.getAltitude()
+            self.gps_data["speed"] = self.gps.getSpeed()
+            self.gps_data["satellites"] = self.gps.getSatellites()
+            self.gps_data["fixQuality"] = self.gps.getFixQuality()
         except Exception as e:
             self.log.error(f"Error getting gps data! Error: {e}")
 
@@ -182,7 +178,6 @@ class main_code():
         except KeyboardInterrupt:
             self.safeShutdown()
 
-
 main = main_code()
 r = radio()
 
@@ -202,12 +197,14 @@ while True:
                 r.send("start: ok")
             else:
                 r.send("start: fail: already running")
+
         elif command.find("stop") != -1:
             if running:
                 main.safeShutdown()
                 r.send("stop: ok")
             else:
                 r.send("stop: fail: not running")
+
         elif command.find("restart") != -1:
             main.safeShutdown()
             thread = None
@@ -215,12 +212,14 @@ while True:
             thread = threading.Thread(target=main.run).start()
             running = True
             r.send("restart: ok")
+
         elif command.find("getdata") != -1:
             if running:
                 data = main.main_data
                 r.send(f"getdata: ok: {data}")
             else:
                 r.send("getdata: fail: not running")
+
         elif command.find("findstart") != -1:
             if not find:
                 find_thread = None
@@ -229,14 +228,17 @@ while True:
                 r.send("findstart: ok")
             else:
                 r.send("findstart: fail: already in find mode")
+
         elif command.find("findstop") != -1:
             if find:
                 main.find = False
                 r.send("findstop: ok")
             else:
                 r.send("findstop: fail: not in find mode")
+
         elif command.find("ping") != -1:
             r.send("pong")
+
     except Exception as e:
         r.send(f"error: {e}")
 

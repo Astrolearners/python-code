@@ -10,15 +10,12 @@ class buzzer():
         self.pin = pin
 
         self.log.info("Initializing buzzer...")
-        try:
-            if self.type == "passive":
-                self.buzzer = TonalBuzzer(self.pin)
-            elif self.type == "active":
-                self.buzzer = Buzzer(self.pin)
-            else:
-                self.log.error("Invalid buzzer type!")
-        except Exception as e:
-            self.log.error(f"Failed to initialize buzzer! Error: {e}")
+        if self.type == "passive":
+            self.buzzer = TonalBuzzer(self.pin)
+        elif self.type == "active":
+            self.buzzer = Buzzer(self.pin)
+        else:
+            self.log.error("Invalid buzzer type!")
 
     def beep(self, delay, times):
         self.log.debug(f"Turning buzzer on and sleeping {delay} second(s) for {times} time(s)...")

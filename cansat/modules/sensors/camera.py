@@ -3,9 +3,12 @@ import datetime
 
 from modules.helpers.logger import logger
 
+from modules.constants.constats import capture_path
+
 class camera():
-    def __init__(self, capture_path):
+    def __init__(self):
         self.log = logger("camera")
+
         self.capture_path = capture_path
 
         self.log.debug("Configuring camera")

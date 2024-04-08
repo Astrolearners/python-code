@@ -1,17 +1,10 @@
 import colorlog
 import logging
 import sys
-from datetime import datetime
-
-from modules.constants.constats import log_path
-
-def setFileName():
-    date_time = datetime.now()
-    file_name = date_time.strftime("%d_%m_%y-%H-%M-%S.log")
-    return f"{log_path}/{file_name}"
+from modules.constants.constats import log_file
 
 class logger():
-    def __init__(self, name, path=setFileName(), level=logging.DEBUG):
+    def __init__(self, name, path=log_file, level=logging.DEBUG):
         self.name = name
         self.path = path
         self.level = level
@@ -25,12 +18,12 @@ class logger():
         self.console_logger = logging.StreamHandler(sys.stdout)
 
         # Create formatter
-        self.formatter = colorlog.ColoredFormatter("%(log_color)s%(name)s: %(asctime)s -  %(levelname)s >\t%(message)s", datefmt="%d-%m-%Y %H:%M:%S", reset=True, log_colors={
+        self.formatter = colorlog.ColoredFormatter("%(name)s: %(asctime)s - %(log_color)s%(levelname)-8s%(reset)s > %(message)s", datefmt="%d-%m-%Y %H:%M:%S", reset=True, log_colors={
             "DEBUG":    "cyan",
             "INFO":     "green",
             "WARNING":  "yellow",
             "ERROR":    "red",
-            "CRITICAL": "bold_red",
+            "CRITICAL": "purple",
 	    },)
         
         # Set formatters

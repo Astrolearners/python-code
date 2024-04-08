@@ -4,14 +4,17 @@ import datetime
 from modules.helpers.logger import logger
 from modules.schemas.schemas import dataframe_schema, main_schema
 
+from modules.constants.constats import csv_file
+
 
 class csvHandler():
-    def __init__(self, csv_path):
+    def __init__(self):
         self.log = logger("csvHandler")
         self.dataframe_schema = dataframe_schema
         self.main_schema = main_schema
-        self.csv_path = csv_path
 
+        self.csv_file = csv_file
+        
         self.log.info("Initializing data frame...")
         self.dataFrame = pd.DataFrame(self.dataframe_schema, index=[0])
 
@@ -43,6 +46,4 @@ class csvHandler():
 
     def saveDataframe(self):
         self.log.info("Saving data to csv...")
-        date_time = datetime.datetime.now()
-        file_name = date_time.strftime("%d_%m_%y-data.csv")
-        self.dataFrame.to_csv(f"{self.csv_path}/{file_name}")
+        self.dataFrame.to_csv(self.csv_file)
