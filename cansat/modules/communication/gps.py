@@ -16,7 +16,10 @@ class gps():
 
     def getSerialData(self):
         self.log.info("Getting serial data...")
-        self.receivedData = self.gps.read()
+        data = self.gps.read()
+        self.log.debug(f"Received data: {data}")
+        if data != None:
+            self.receivedData = data
 
     def parseData(self):
         self.log.info("Parsing data to pynmea2...")

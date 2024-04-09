@@ -77,7 +77,7 @@ class softwareSerial():
                                 final_string = final_string.strip(self.bol)
                                 final_string = final_string.strip(self.eol)
                                 return final_string
-            self.logger.warning("Timeout reached!")
+            self.logger.warn("Timeout reached!")
             return None
         except Exception as e:
             self.logger.error(f"Failed to get data, error: {e}")

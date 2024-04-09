@@ -38,7 +38,7 @@ class logger():
         self.logger.info(text)
 
     def warn(self, text):
-        self.logger.warn(text)
+        self.logger.warning(text)
 
     def error(self, text):
         self.logger.error(text)
