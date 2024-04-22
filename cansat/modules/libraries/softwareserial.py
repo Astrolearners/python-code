@@ -4,7 +4,7 @@ import time
 from modules.helpers.logger import logger
 
 class softwareSerial():
-    def __init__(self, txd_pin, rxd_pin, baudrate, timeout=15, bol="$", eol="/r"):
+    def __init__(self, txd_pin, rxd_pin, baudrate, timeout=15, bol="/r/n", eol="/r/n"):
         self.logger = logger("softwareSerial")
 
         self.txd = txd_pin

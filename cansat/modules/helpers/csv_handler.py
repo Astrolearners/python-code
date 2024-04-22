@@ -1,5 +1,4 @@
 import pandas as pd
-import datetime
 
 from modules.helpers.logger import logger
 from modules.schemas.schemas import dataframe_schema, main_schema

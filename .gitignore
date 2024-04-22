@@ -3,9 +3,7 @@
 __pycache__/
 
 # Data
-captures/
-logs/
-csv-files/
+data/
 
 # Testing files
 testing.py

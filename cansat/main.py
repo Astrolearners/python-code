@@ -1,6 +1,6 @@
 # System libraries
 from datetime import datetime
-import threading
+import time
 
 # Helpers
 from modules.helpers.logger import logger
@@ -28,9 +28,6 @@ from modules.constants.constats import *
 class main_code():
     def __init__(self):
         self.log = logger("main")
-
-        self.running = True
-        self.find = False
 
         self.log.info("Initializing helper components...")
 
@@ -84,6 +81,13 @@ class main_code():
             self.debug_buzzer.beep(3, 1)
 
         try:
+            self.log.debug("Initializing radio module...")
+            self.radio = radio()
+        except Exception as e:
+            self.log.critical(f"Failed to initialize the radio module! Error: {e}")
+            self.debug_buzzer.beep(3, 1)
+
+        try:
             self.log.debug("Initializing camera...")
             self.camera = camera()
             self.camera.start()
@@ -92,6 +96,7 @@ class main_code():
             self.debug_buzzer.beep(3, 1)
 
         self.log.info("Creating data arrays...")
+
         self.bme_data = bme_schema
         self.gps_data = gps_schema
         self.accelerometer_data = accelerometer_schema
@@ -134,25 +139,24 @@ class main_code():
 
     def safeShutdown(self):
         self.log.warn("Safe shutdown...")
-        self.running = False
         self.camera.stop()
         self.csv_handler.saveDataframe()
-
-    def findBuzeer(self):
-        while self.find:
-            self.find_buzzer.beep(0.5, 1)
+        exit(0)
 
     def run(self):
         self.log.info("Ready!")
         self.debug_buzzer.beep(0.5, 2)
 
+        self.log.info("Starting 300 seconds countdown!")
+        start_time = time.perf_counter()
+
         try:
-            while self.running:
+            while (time.perf_counter() - start_time) < 300:
                 self.log.info("Getting data...")
                 self.debug_buzzer.beep(0.5, 1)
 
                 # Time
-                time = datetime.now()
+                fetch_time = datetime.now()
 
                 # Sensor Data
                 self.getGpsData()
@@ -160,7 +164,7 @@ class main_code():
                 self.getAccelerometerData()
 
                 # Parse data to array
-                self.main_data["time"] = f"{time.hour}:{time.minute}:{time.second}"
+                self.main_data["time"] = f"{fetch_time.hour}:{fetch_time.minute}:{fetch_time.second}"
                 self.main_data["bme"] = self.bme_data
                 self.main_data["gps"] = self.gps_data
                 self.main_data["accelerometer"] = self.accelerometer_data
@@ -175,71 +179,16 @@ class main_code():
                 
                 # Log
                 self.log.debug(self.main_data)
+
+                # Send via radio
+                self.radio.send(self.main_data)
+                
+            self.log.info("Flight finished! Starting find buzzer!")
+
+            while True:
+                self.find_buzzer.beep(1, 1)
+
         except KeyboardInterrupt:
             self.safeShutdown()
 
-main = main_code()
-r = radio()
-
-running = False
-find = False
-
-while True:
-    command = r.get()
-
-    try:
-        if command.find("start") != -1:
-            if not running:
-                thread = None
-                main.running = True
-                thread = threading.Thread(target=main.run).start()
-                running = True
-                r.send("start: ok")
-            else:
-                r.send("start: fail: already running")
-
-        elif command.find("stop") != -1:
-            if running:
-                main.safeShutdown()
-                r.send("stop: ok")
-            else:
-                r.send("stop: fail: not running")
-
-        elif command.find("restart") != -1:
-            main.safeShutdown()
-            thread = None
-            main.running = True
-            thread = threading.Thread(target=main.run).start()
-            running = True
-            r.send("restart: ok")
-
-        elif command.find("getdata") != -1:
-            if running:
-                data = main.main_data
-                r.send(f"getdata: ok: {data}")
-            else:
-                r.send("getdata: fail: not running")
-
-        elif command.find("findstart") != -1:
-            if not find:
-                find_thread = None
-                main.find = True
-                find_thread = threading.Thread(target=main.findBuzeer).start()
-                r.send("findstart: ok")
-            else:
-                r.send("findstart: fail: already in find mode")
-
-        elif command.find("findstop") != -1:
-            if find:
-                main.find = False
-                r.send("findstop: ok")
-            else:
-                r.send("findstop: fail: not in find mode")
-
-        elif command.find("ping") != -1:
-            r.send("pong")
-
-    except Exception as e:
-        r.send(f"error: {e}")
-
-# DONE 🎊🎊🎊
+main_code().run()
