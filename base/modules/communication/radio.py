@@ -26,3 +26,10 @@ class radio():
                 self.log.warn("Timeout reached!")
         except Exception as e:
             self.log.error(f"Failed to get data! Error {e}")
+
+    def config(self, frequency=433000, dataRate=9600, power=9, uartRate=3, seriesCheckout=0):
+        try:
+            self.log.info(f"Configuring radio with parameters: {frequency} {dataRate} {power} {uartRate} {seriesCheckout}")
+            self.radio.write(f"WR {frequency} {dataRate} {power} {uartRate} {seriesCheckout}")
+        except Exception as e:
+            self.log.error(f"Error sending data to gps module! Error: {e}")

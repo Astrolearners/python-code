@@ -83,6 +83,7 @@ class main_code():
         try:
             self.log.debug("Initializing radio module...")
             self.radio = radio()
+            self.radio.config()
         except Exception as e:
             self.log.critical(f"Failed to initialize the radio module! Error: {e}")
             self.debug_buzzer.beep(3, 1)
